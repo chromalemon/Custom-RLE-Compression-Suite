@@ -5,15 +5,22 @@ This is a tool for compressing and decompressing files, using the Run Length Enc
 
 
 # How to run it
-<p>
-The different modes supported are:
--cB (compress bmp)
--dB (decompress bmp)
-</p>
 
-<p>$ git clone https://github.com/chromalemon/Custom-RLE-Compression-Suite</p>
-<p>$ make</p>
-<p>$ ./rle_tool {mode} {input_path} {output_path}</p>
+**Supported Modes:**
+
+- -cB - Compress a BMP file
+- -dB - Decompress a BMP file
+
+```bash
+#clone this repo
+git clone https://github.com/chromalemon/Custom-RLE-Compression-Suite
+
+#compile c files
+make
+
+#run tool
+./rle_tool {mode} {input_path} {output_path}
+```
 
 
 
