@@ -2,8 +2,8 @@ CC = gcc
 CFLAGS = -Wall -Wextra -Werror -std=gnu99 -Iinclude
 
 TARGET = rle_tool
-SRCS = src/bmp.c src/rle.c src/main.c
-OBJS = src/bmp.o src/rle.o src/main.o
+SRCS = src/calc.c src/bmp.c src/rle.c src/main.c
+OBJS = src/calc.o src/bmp.o src/rle.o src/main.o
 
 .PHONY: all clean
 

@@ -1,3 +1,4 @@
+#include "calc.h"
 
 long calc_file_size(const char* path){
 	FILE* fp = fopen(path, "rb");
