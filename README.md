@@ -1,37 +1,41 @@
-# Custom RLE Compression Suite
+# Custom RLE Compression Suite Overview
 
 This is a tool for compressing and decompressing files, using the Run Length Encoding algorithm. This type of compression is most commonly used for bitmap images, which often involve long sequences of repeating colours.
 
+# Installation & Running
 
-
-# How to run it
-
-**Supported Modes:**
-
-- -cB - Compress a BMP file
-- -dB - Decompress a BMP file
+Clone the repository:
 
 ```bash
-#clone this repo
-git clone https://github.com/chromalemon/Custom-RLE-Compression-Suite
-
-#compile c files
-make
-
-#run tool
-./rle_tool {mode} {input_path} {output_path}
+git clone https://github.com/chromalemon/Custom-RLE-Compression-Suite RLE_Suite
+cd RLE_Suite
 ```
 
+Compile the files:
 
+```bash
+make
+```
 
+Run the program:
 
+```bash
+./rle_tool [OPTION]... SOURCE DEST
+```
 
+**Options:**
 
+- -c = compress
+- -d = decompress
+- -s = suppress size info (no "Original size: New size:" message)
+- -b = BMP file format
 
+**Example Usage:**
 
+- ./rle_tool -c -b input.bmp output.rle
 
-# a
+# Backstory
 
-I decided to write this program to explore file handling and precise stream positioning.
+I wrote this program so I could explore file handling, streams, padding, buffers, strict formatting, error handling, memory management, and other principles/concepts.
 
-The most difficult part for me was handling sequences of length > 255. I stored length as an unsigned char to restrict its size to 1 byte, improving compression ratio compared to using types like int. It was hard for me to keep track of where the stream position should stop / move to and what the counter should be set to once a sequence of length 255 was encountered, but after some rough sketching and careful thinking I figured it out.
+Originally, I only had pure RLE in mind for standard text files. I stored counts as unsigned chars, and the data to compress was always simply 8 bits per block. This was a bit boring so I looked into BMP files and how they are formatted. I realised that rather than having my program focus specifically on files, I should try to make a universal RLE tool. It should be compatible with any input stream: files, network packets, sensor data, live video, and more.
