@@ -1,6 +1,7 @@
-# Sample files for testing
+# Test and program files
 *.bmp
 *.rle
+rle_tool
 
 # Prerequisites
 *.d
