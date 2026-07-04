@@ -3,12 +3,13 @@
 #include "calc.h"
 
 void decompress_bmp(const char* input_path, const char* output_path){
-	FILE* infile = fopen(input_path, "rb");
-	FILE* outfile = fopen(output_path, "rw");
+	FILE* infile = NULL;
+	FILE* outfile = NULL;
 	uint8_t *inp_buf = NULL;
 	uint8_t *out_buf = NULL;
 
-	if (!infile || !outfile){
+	infile = fopen(input_path, "rb");
+	if (!infile){
 		perror("Could not open file.\n");
 		goto cleanup;
 	}
@@ -23,28 +24,67 @@ void decompress_bmp(const char* input_path, const char* output_path){
 	size_t unpadded_row_length = (meta.width * meta.BPP) / 8;
 	size_t total_padded_row_length = ((unpadded_row_length + 3) / 4) * 4;
 	uint8_t padding_bytes_to_skip = total_padded_row_length - unpadded_row_length;
-	uint32_t image_size = total_padded_row_length * height;
+	uint32_t image_size = total_padded_row_length * meta.height;
 	size_t max_out_size = meta.height * unpadded_row_length;
 	uint16_t block_size = meta.BPP / 8;
+	uint8_t zero = 0;	
 
 	meta.image_size = image_size;
 	meta.file_size = image_size + 54;
 
-	if (!fwrite(%meta, sizeof(BMP_meta), 1, outfile)){
+	outfile = fopen(output_path, "wb");
+	if (!outfile){
+		perror("Could not open file.\n");
+		goto cleanup;
+	}
+
+	if (!fwrite(&meta, sizeof(BMP_meta), 1, outfile)){
 		perror("Could not write BMP header.\n");
 		goto cleanup;
 	}
 
-	long curr_file_size = calc_file_size(infile) - 54;
-	inp_buf = malloc(curr_file_size);
+	size_t payload_size = calc_file_size(input_path) - 54;
+	inp_buf = malloc(payload_size);
 
 	if (inp_buf == NULL){
 		perror("Could not allocate memory.\n");
 		goto cleanup;
 	}
-
+	uint8_t *inp_ptr = inp_buf;
 	
+	if (fread(inp_ptr, 1, payload_size, infile) < payload_size){
+		perror("Could not read file.\n");
+		goto cleanup;
+	}	
 
+	out_buf = malloc(max_out_size);
+	if (out_buf == NULL){
+		perror("Could not allocate memory.\n");
+		goto cleanup;
+	}
+
+	uint8_t *out_ptr = out_buf;
+
+	int res = decompress(inp_buf, (inp_ptr - inp_buf), out_buf, &out_ptr, max_out_size, block_size);
+	if (res != 1){
+		perror("Could not decompress BMP file.\n");
+		goto cleanup;
+	}	
+
+	out_ptr = out_buf;
+	for (uint8_t i = 0; i < meta.height; i++){
+		if (fwrite(out_ptr, 1, unpadded_row_length, outfile) < unpadded_row_length){
+			perror("Could not write to file.\n");
+			goto cleanup;
+		}
+		out_ptr += unpadded_row_length;
+		if (fwrite(&zero, 1, padding_bytes_to_skip, outfile) < padding_bytes_to_skip){
+			perror("Could not write to file.\n");
+			goto cleanup;
+		}
+		out_ptr += padding_bytes_to_skip;
+	}	
+	
 	goto cleanup;
 	
 cleanup:
@@ -97,7 +137,7 @@ void compress_bmp(const char* input_path, const char* output_path){
 	fseek(infile, meta.offset, SEEK_SET);
 	
 	for (uint32_t i = 0; i < meta.height; i++){
-		if (fread(inp_ptr, 1, unpadded_row_length, infile) == 0){
+		if (fread(inp_ptr, 1, unpadded_row_length, infile) < unpadded_row_length){
 			perror("Could not read file.\n");
 			goto cleanup;
 		}

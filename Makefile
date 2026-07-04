@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -std=c99 -Iinclude
+CFLAGS = -Wall -Wextra -Werror -std=gnu99 -Iinclude
 
 TARGET = rle_tool
 SRCS = src/bmp.c src/rle.c src/main.c
