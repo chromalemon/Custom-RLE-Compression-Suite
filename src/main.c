@@ -36,17 +36,17 @@ int main(int argc, char* argv[]){
 	}
 
 	if (compress == decompress){
-		perror("Cannot have both -c and -d. Choose one.\n");
+		fprintf(stderr, "Error: Expected one of -c and -d, received neither or both.\n");
 		exit(EXIT_FAILURE);
 	}
 
 	if (format == 0){
-		perror("Specify the input/output format, e.g., -b for BMP.\n");
+		fprintf(stderr, "Error: Specify the input/output format, e.g., -b for BMP.\n");
 		exit(EXIT_FAILURE);
 	}
 
 	if (optind + 2 != argc){
-		perror("Expected exactly two additional arguments for input/outputs paths.\n");
+		fprintf(stderr, "Error: Expected exactly two additional arguments for input/outputs paths.\n");
 		exit(EXIT_FAILURE);
 	}
 
