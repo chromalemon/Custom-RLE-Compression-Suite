@@ -11,7 +11,7 @@ int compress(uint8_t *inp_buf, size_t inp_size, uint8_t *out_buf, uint8_t **out_
 			count += 1;
 			if (count == 255){
 				if (write_to_buf(out_buf, out_ptr, block_size, max_out_size, count, prev_block) != 1){
-					perror("Could not write to output buffer.\n");
+					fprintf(stderr, "Error: Could not write to output buffer.\n");
 					return 0;
 				}
 				count = 0;		
@@ -19,7 +19,7 @@ int compress(uint8_t *inp_buf, size_t inp_size, uint8_t *out_buf, uint8_t **out_
 		} else {
 			if (count > 0){
 				if (write_to_buf(out_buf, out_ptr, block_size, max_out_size, count, prev_block) != 1){
-					perror("Could not write to output buffer.\n");
+					fprintf(stderr, "Error: Could not write to output buffer.\n");
 					return 0;
 				}
 			}
@@ -29,7 +29,7 @@ int compress(uint8_t *inp_buf, size_t inp_size, uint8_t *out_buf, uint8_t **out_
 		curr_block += block_size;
 	}
 	if (count > 0 && !write_to_buf(out_buf, out_ptr, block_size, max_out_size, count, prev_block)){
-		perror("Could not write to output buffer.\n");
+		fprintf(stderr, "Error: Could not write to output buffer.\n");
 		return 0;
 	}
 
@@ -40,7 +40,7 @@ int compress(uint8_t *inp_buf, size_t inp_size, uint8_t *out_buf, uint8_t **out_
 int write_to_buf(uint8_t *out_buf, uint8_t **out_ptr, const uint16_t block_size, const size_t max_out_size, const uint8_t count, const uint8_t *prev_block){
 	size_t curr_size = *out_ptr - out_buf;
 	if (curr_size + 1 + block_size > max_out_size){
-		perror("Output exceeded buffer size.\n");
+		fprintf(stderr, "Error: Output exceeded buffer size.\n");
 		return 0;
 	}
 	
@@ -61,7 +61,7 @@ int decompress(uint8_t *inp_buf, size_t inp_size, uint8_t *out_buf, uint8_t **ou
 		for (uint8_t i = 0; i < *count; i++){
 			size_t curr_size = *out_ptr - out_buf;
 			if (curr_size + block_size > max_out_size){
-				perror("Output exceeded buffer size.\n");
+				fprintf(stderr, "Error: Output exceeded buffer size.\n");
 				return 0;
 			}
 			
