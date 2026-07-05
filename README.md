@@ -2,6 +2,19 @@
 
 This is a tool for compressing and decompressing files, using the Run Length Encoding algorithm. This type of compression is most commonly used for bitmap images, which often involve long sequences of repeating colours.
 
+[!NOTE]
+For BMP compression and decompression, only V3 24 BPP is supported.
+
+Example of compression:
+
+```
+Compression complete.
+
+Original: 822 bytes
+New: 62 bytes
+Compression ratio: 7.54%
+```
+
 # Installation & Running
 
 Clone the repository:
@@ -32,7 +45,7 @@ Run the program:
 
 **Example Usage:**
 
-- ./rle_tool -c -b input.bmp output.rle
+- ./rle_tool -c -b input.bmp output.bmp
 
 # Backstory
 
