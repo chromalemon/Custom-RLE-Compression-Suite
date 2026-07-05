@@ -2,8 +2,8 @@
 
 This is a tool for compressing and decompressing files, using the Run Length Encoding algorithm. This type of compression is most commonly used for bitmap images, which often involve long sequences of repeating colours.
 
-[!NOTE]
-For BMP compression and decompression, only V3 24 BPP is supported.
+> [!NOTE]
+> For BMP compression and decompression, only V3 24 BPP is supported.
 
 Example of compression:
 
