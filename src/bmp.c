@@ -2,7 +2,7 @@
 #include "bmp.h"
 #include "calc.h"
 
-void decompress_bmp(const char* input_path, const char* output_path){
+int decompress_bmp(const char* input_path, const char* output_path){
 	FILE* infile = NULL;
 	FILE* outfile = NULL;
 	uint8_t *inp_buf = NULL;
@@ -81,7 +81,8 @@ void decompress_bmp(const char* input_path, const char* output_path){
 		}
 		out_ptr += padding_bytes_to_skip;
 	}	
-	
+
+	res = 1;	
 	goto cleanup;
 	
 cleanup:
@@ -89,10 +90,10 @@ cleanup:
 	if (outfile) fclose(outfile);
 	free(inp_buf);
 	free(out_buf);
-	return;
+	return (res == 1);
 }
 
-void compress_bmp(const char* input_path, const char* output_path){
+int compress_bmp(const char* input_path, const char* output_path){
 	FILE* infile = NULL;
 	FILE* outfile = NULL;
 	uint8_t *inp_buf = NULL;
@@ -102,7 +103,7 @@ void compress_bmp(const char* input_path, const char* output_path){
 	infile = fopen(input_path, "rb");
 	if (!infile){
 		fprintf(stderr, "Error: Could not open input file.\n");
-		return;
+		goto cleanup;
 	}	
 
 	BMP_meta meta;
@@ -166,16 +167,15 @@ void compress_bmp(const char* input_path, const char* output_path){
 		goto cleanup;
 	}
 
+	res = 1;
 	goto cleanup;
 
 cleanup:
 	if (inp_buf) free(inp_buf);
 	if (out_buf) free(out_buf);
-
 	if (infile) fclose(infile);
 	if (outfile) fclose(outfile);
-
-	return;
+	return (res == 1);
 }
 
 int read_meta(FILE* infile, BMP_meta *meta){
