@@ -1,4 +1,4 @@
-# Custom RLE Compression Suite Overview
+# RLE Compression Tool Overview
 
 This is a tool for compressing and decompressing files, using the Run Length Encoding algorithm. This type of compression is most commonly used for bitmap images, which often involve long sequences of repeating colours.
 
