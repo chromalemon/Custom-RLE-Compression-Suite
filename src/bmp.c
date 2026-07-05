@@ -207,6 +207,11 @@ int read_meta(FILE* infile, BMP_meta *meta){
 		return 0;
 	}
 
+	if (meta->offset != 54){
+		perror("BMP offset must be 54 bytes.\n");
+		return 0;
+	}	
+
 	if (meta->BPP != 24){
 		perror("Bits per pixel must be 24.\n");
 		return 0;
