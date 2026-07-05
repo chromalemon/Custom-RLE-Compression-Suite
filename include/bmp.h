@@ -28,7 +28,7 @@ typedef struct {
 #pragma pack(pop)
 
 int read_meta(FILE* infile, BMP_meta *meta);
-void compress_bmp(const char* input_path, const char* output_path);
-void decompress_bmp(const char* input_path, const char* output_path);
+int compress_bmp(const char* input_path, const char* output_path);
+int decompress_bmp(const char* input_path, const char* output_path);
 
 #endif
