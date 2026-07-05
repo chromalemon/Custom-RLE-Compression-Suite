@@ -30,9 +30,9 @@ void print_diff(const char* input_path, const char* output_path){
 		return;
 	}
 
-	float ratio = new / original * 100;
+	float ratio = ((float)new / original) * 100;
 
-	printf("\n Original: %ld", original);
-	printf("\n New: %ld", new);
+	printf("\nOriginal: %ld", original);
+	printf("\nNew: %ld", new);
 	printf("\nCompression ratio: %.2f\n", ratio);
 }
