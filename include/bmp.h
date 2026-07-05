@@ -6,7 +6,8 @@
 #include <stdlib.h>
 
 #pragma pack(push, 1)
-typedef struct BMP_meta {
+
+typedef struct {
 	uint16_t file_type;
 	uint32_t file_size;
 	uint16_t reserved1;

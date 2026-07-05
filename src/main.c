@@ -12,7 +12,9 @@ int main(int argc, char* argv[]){
 	int compress = 0;
 	int decompress = 0;
 	char format = 0;
-
+	int silence = 0;
+	int is_file = 0;
+	
 	while ((opt = getopt(argc, argv, "cdb")) != -1){
 		switch (opt){
 			case 'c':
@@ -23,6 +25,10 @@ int main(int argc, char* argv[]){
 				break;
 			case 'b':
 				format = 'B';
+				is_file = 1;
+				break;
+			case 's':
+				silence = 1;
 				break;
 			default:
 				break;
@@ -30,14 +36,17 @@ int main(int argc, char* argv[]){
 	}
 
 	if (compress == decompress){
+		perror("Cannot have both -c and -d. Choose one.\n");
 		exit(EXIT_FAILURE);
 	}
 
 	if (format == 0){
+		perror("Specify the input/output format, e.g., -b for BMP.\n");
 		exit(EXIT_FAILURE);
 	}
 
 	if (optind + 2 != argc){
+		perror("Expected exactly two additional arguments for input/outputs paths.\n");
 		exit(EXIT_FAILURE);
 	}
 
@@ -53,6 +62,10 @@ int main(int argc, char* argv[]){
 		if (format == 'B'){
 			decompress_bmp(input_path, output_path);
 		}
+	}
+
+	if (!silence && is_file){
+		print_diff(input_path, output_path);
 	}
 
 	return 0;

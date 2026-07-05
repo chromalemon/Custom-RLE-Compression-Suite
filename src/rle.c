@@ -29,7 +29,6 @@ int compress(uint8_t *inp_buf, size_t inp_size, uint8_t *out_buf, uint8_t **out_
 		curr_block += block_size;
 	}
 	if (count > 0 && !write_to_buf(out_buf, out_ptr, block_size, max_out_size, count, prev_block)){
-		printf("%d\n", count);
 		perror("Could not write to output buffer.\n");
 		return 0;
 	}
@@ -41,7 +40,7 @@ int compress(uint8_t *inp_buf, size_t inp_size, uint8_t *out_buf, uint8_t **out_
 int write_to_buf(uint8_t *out_buf, uint8_t **out_ptr, const uint16_t block_size, const size_t max_out_size, const uint8_t count, const uint8_t *prev_block){
 	size_t curr_size = *out_ptr - out_buf;
 	if (curr_size + 1 + block_size > max_out_size){
-		printf("%zu, %zu\n", curr_size, max_out_size);
+		perror("Output exceeded buffer size.\n");
 		return 0;
 	}
 	
@@ -62,6 +61,7 @@ int decompress(uint8_t *inp_buf, size_t inp_size, uint8_t *out_buf, uint8_t **ou
 		for (uint8_t i = 0; i < *count; i++){
 			size_t curr_size = *out_ptr - out_buf;
 			if (curr_size + block_size > max_out_size){
+				perror("Output exceeded buffer size.\n");
 				return 0;
 			}
 			
@@ -76,98 +76,3 @@ int decompress(uint8_t *inp_buf, size_t inp_size, uint8_t *out_buf, uint8_t **ou
 	return 1;
 	
 }
-
-/*
-void compress_file(const char* input_path, const char* output_path){
-	FILE* infile = fopen(input_path, "rb");
-	FILE* outfile = fopen(output_path, "wb");
-
-	if (!infile || !outfile){
-		perror("Could not open files.\n");
-		if (infile) fclose(infile);
-		if (outfile) fclose(outfile);
-		return;
-	}
-	
-	int curr_b;
-	int prev_b = fgetc(infile);
-
-	if (prev_b == EOF){
-		fclose(infile);
-		fclose(outfile);
-		return;
-	}
-	
-	unsigned char count = 1;
-
-	while (curr_b != EOF){
-		curr_b = fgetc(infile);
-		if (curr_b == EOF) break;
-		if (curr_b == prev_b){
-			count += 1;
-			if (count == 255){
-				fputc(count, outfile);
-				fputc(prev_b, outfile);
-				count = 0;
-			}
-		}else{
-			if (count == 0){
-				prev_b = curr_b;
-				count = 1;
-				
-			}else{
-				fputc(count, outfile);
-				fputc(prev_b, outfile);
-				prev_b = curr_b;
-				count = 1; 
-			}
-		}
-	}
-	fputc(count, outfile);
-	fputc(prev_b, outfile);
-
-	fclose(infile);
-	fclose(outfile);
-	printf("Compression complete.\n");
-	return;	
-}
-
-
-
-
-
-void decompress_file(const char* input_path, const char* output_path){
-	FILE* infile = fopen(input_path, "rb");
-	FILE* outfile = fopen(output_path, "wb");
-
-	if (!infile || !outfile){
-		if (infile) fclose(infile);
-		if (outfile) fclose(outfile);
-		perror("Could not open files.\n");
-		return;
-	}
-	
-	int curr_b;
-	int count = fgetc(infile);
-
-	if (count == EOF){
-		fclose(infile);
-		fclose(outfile);
-		return;
-	}
-
-	while (count != EOF){
-		curr_b = fgetc(infile);
-		for (int i = 0; i < count; i++){
-			fputc(curr_b, outfile);
-		}
-		count = fgetc(infile);
-	}
-
-	fclose(infile);
-	fclose(outfile);
-	printf("Decompression complete.\n");
-	return;
-	
-}
-*/

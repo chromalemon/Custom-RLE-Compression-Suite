@@ -3,7 +3,7 @@
 long calc_file_size(const char* path){
 	FILE* fp = fopen(path, "rb");
 	if (!fp){
-		perror("Could not open file.\n");
+		perror("Could not open file to calculate size.\n");
 		return -1L;
 	}
 	
@@ -20,4 +20,19 @@ long calc_file_size(const char* path){
 	fclose(fp);
 	return size;
 
+}
+
+void print_diff(const char* input_path, const char* output_path){
+	long original = calc_file_size(input_path);
+	long new = calc_file_size(output_path);
+	if (original == -1L || new == -1L){
+		perror("Could not calculate file sizes.\n");
+		return;
+	}
+
+	float ratio = new / original * 100;
+
+	printf("\n Original: %ld", original);
+	printf("\n New: %ld", new);
+	printf("\nCompression ratio: %.2f\n", ratio);
 }
