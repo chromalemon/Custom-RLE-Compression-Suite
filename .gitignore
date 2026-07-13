@@ -3,6 +3,7 @@
 *.rle
 *.swp
 rle_tool
+run_tests
 
 # Prerequisites
 *.d
