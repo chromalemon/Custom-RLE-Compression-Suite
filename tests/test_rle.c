@@ -12,13 +12,35 @@ void tearDown(void)
     // Runs after every test
 }
 
-void test_empty_string_compresses_to_empty(void)
+void test_single_character_compression(void)
 {
-   mem_struct mem;
-   int res = mem_init(&mem, 
+    mem_struct mem;
+    int res = mem_init(&mem, 1, 0, 1, 0, 1); 
+    TEST_ASSERT_EQUAL_INT(1, res);
+
+    unsigned char str[1] = {'A'};
+    memcpy(mem.inp_buf, str, 1);
+
+    res = compress(&mem);
+    TEST_ASSERT_EQUAL_INT(1, res);
+
+    TEST_ASSERT_EQUAL_UINT8(1, mem.out_buf[0]);
+    TEST_ASSERT_EQUAL_UINT8('A', mem.out_buf[1]);
+
 }
 
-void test_single_character(void)
+void test_single_character_decompression(void)
 {
+    mem_struct mem;
+    int res = mem_init(&mem, 1, 0, 0, 1, 2); 
+    TEST_ASSERT_EQUAL_INT(1, res);
+
+    unsigned char str[2] = {1, 'A'};
+    memcpy(mem.inp_buf, str, 2);
+
+    res = decompress(&mem);
+    TEST_ASSERT_EQUAL_INT(1, res);
+
+    TEST_ASSERT_EQUAL_UINT8('A', mem.out_buf[0]);
 
 }
