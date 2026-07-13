@@ -26,7 +26,12 @@ void test_single_character_compression(void)
 
     TEST_ASSERT_EQUAL_UINT8(1, mem.out_buf[0]);
     TEST_ASSERT_EQUAL_UINT8('A', mem.out_buf[1]);
+    
+    goto cleanup;
 
+cleanup:
+    free(mem.inp_buf);
+    free(mem.out_buf);
 }
 
 void test_single_character_decompression(void)
@@ -42,5 +47,11 @@ void test_single_character_decompression(void)
     TEST_ASSERT_EQUAL_INT(1, res);
 
     TEST_ASSERT_EQUAL_UINT8('A', mem.out_buf[0]);
+
+    goto cleanup;
+
+cleanup:
+    free(mem.inp_buf);
+    free(mem.out_buf);
 
 }
