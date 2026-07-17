@@ -148,7 +148,8 @@ int decompress_bmp(const char *input_path, const char *output_path) {
 
 	res = decompress(&mem);
 	if (res != 1) {
-		res = 0 goto cleanup;
+		res = 0;
+		goto cleanup;
 	}
 	size_t new_size = mem.out_ptr - mem.out_buf;
 	uint32_t file_size = (uint32_t)(new_size + sizeof(BMP_meta));
