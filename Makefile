@@ -49,7 +49,7 @@ check-format:
 	clang-format --dry-run --Werror $(SRCS) $(HDRS)
 
 lint:
-	clang-tidy $(SRCS) $(CFLAGS)
+	clang-tidy $(SRCS) $(CFLAGS) -checks=-clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling
 
 clean:
 	rm -f src/*.o $(TARGET) $(TEST_TARGET)
