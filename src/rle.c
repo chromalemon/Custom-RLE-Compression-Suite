@@ -1,5 +1,5 @@
-#include "rle.h"
 #include "file.h"
+#include "rle.h"
 
 int compress(mem_struct *mem) {
   uint8_t *curr_block = mem->inp_buf;
@@ -129,8 +129,10 @@ cleanup:
     fclose(file.infile);
   if (file.outfile)
     fclose(file.outfile);
-  free(mem.inp_buf);
-  free(mem.out_buf);
+  if (mem.inp_buf)
+    free(mem.inp_buf);
+  if (mem.out_buf)
+    free(mem.out_buf);
   return res;
 }
 
@@ -194,7 +196,9 @@ cleanup:
     fclose(file.infile);
   if (file.outfile)
     fclose(file.outfile);
-  free(mem.inp_buf);
-  free(mem.out_buf);
+  if (mem.inp_buf)
+    free(mem.inp_buf);
+  if (mem.out_buf)
+    free(mem.out_buf);
   return res;
 }
