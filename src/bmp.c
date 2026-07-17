@@ -8,9 +8,10 @@ int compress_bmp(const char *input_path, const char *output_path) {
 	BMP_meta meta = {0};
 
 	res = read_meta(input_path, &meta);
-	if (res != 1)
-		return 0;
-
+	if (res != 1) {
+		res = 0;
+		goto cleanup;
+	}
 	if (meta.compression != 0) {
 		fprintf(stderr, "Error: BMP file already compressed.\n");
 		res = 0;
@@ -27,13 +28,15 @@ int compress_bmp(const char *input_path, const char *output_path) {
 	mem_struct mem = {0};
 
 	res = file_init(&file, input_path, output_path);
-	if (res != 1)
-		return 0;
-
+	if (res != 1) {
+		res = 0;
+		goto cleanup;
+	}
 	res = mem_init(&mem, block_size, meta.offset, 1, 0, file.input_size);
-	if (res != 1)
-		return 0;
-
+	if (res != 1) {
+		res = 0;
+		goto cleanup;
+	}
 	uint8_t *inp_ptr = mem.inp_buf;
 	if (fseek(file.infile, meta.offset, SEEK_SET) != 0) {
 		fprintf(stderr, "Error: Fseek failed.\n");
@@ -55,9 +58,10 @@ int compress_bmp(const char *input_path, const char *output_path) {
 	}
 
 	res = compress(&mem);
-	if (res != 1)
+	if (res != 1) {
+		res = 0;
 		goto cleanup;
-
+	}
 	size_t new_size = mem.out_ptr - mem.out_buf;
 	if (new_size + 54 > UINT32_MAX) {
 		fprintf(stderr, "Error: Compressed file too large for BMP3.\n");
@@ -100,9 +104,10 @@ int decompress_bmp(const char *input_path, const char *output_path) {
 	BMP_meta meta = {0};
 
 	res = read_meta(input_path, &meta);
-	if (res != 1)
-		return 0;
-
+	if (res != 1) {
+		res = 0;
+		goto cleanup;
+	}
 	if (meta.compression == 0) {
 		fprintf(stderr, "Error: BMP file is not compressed.\n");
 		res = 0;
@@ -121,13 +126,15 @@ int decompress_bmp(const char *input_path, const char *output_path) {
 	mem_struct mem = {0};
 
 	res = file_init(&file, input_path, output_path);
-	if (res != 1)
-		return 0;
-
+	if (res != 1) {
+		res = 0;
+		goto cleanup;
+	}
 	res = mem_init(&mem, block_size, meta.offset, 0, old_size, file.input_size);
-	if (res != 1)
-		return 0;
-
+	if (res != 1) {
+		res = 0;
+		goto cleanup;
+	}
 	if (fseek(file.infile, meta.offset, SEEK_SET) != 0) {
 		fprintf(stderr, "Error: Fseek failed.\n");
 		res = 0;
@@ -140,9 +147,9 @@ int decompress_bmp(const char *input_path, const char *output_path) {
 	}
 
 	res = decompress(&mem);
-	if (res != 1)
-		goto cleanup;
-
+	if (res != 1) {
+		res = 0 goto cleanup;
+	}
 	size_t new_size = mem.out_ptr - mem.out_buf;
 	uint32_t file_size = (uint32_t)(new_size + sizeof(BMP_meta));
 	meta.file_size = file_size;
