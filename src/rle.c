@@ -83,8 +83,8 @@ int compress_regular(const char *input_path, const char *output_path,
                      const uint8_t block_size) {
   int res = 0;
 
-  file_struct file = {};
-  mem_struct mem = {};
+  file_struct file = {0};
+  mem_struct mem = {0};
 
   res = file_init(&file, input_path, output_path);
   if (res != 1)
@@ -104,7 +104,7 @@ int compress_regular(const char *input_path, const char *output_path,
   if (res != 1)
     goto cleanup;
 
-  reg_meta meta = {};
+  reg_meta meta = {0};
   memcpy(&meta.signature, "RLE!", 4);
   meta.block_size = block_size;
   meta.old_size = mem.max_in_size;
@@ -139,14 +139,14 @@ cleanup:
 int decompress_regular(const char *input_path, const char *output_path) {
   int res = 0;
 
-  file_struct file = {};
-  mem_struct mem = {};
+  file_struct file = {0};
+  mem_struct mem = {0};
 
   res = file_init(&file, input_path, output_path);
   if (res != 1)
     return 0;
 
-  reg_meta meta = {};
+  reg_meta meta = {0};
 
   if (!fread(&meta, sizeof(reg_meta), 1, file.infile)) {
     fprintf(stderr, "Error: Could not read metadata from input file.\n");

@@ -5,7 +5,7 @@
 int compress_bmp(const char *input_path, const char *output_path) {
   int res = 0;
 
-  BMP_meta meta = {};
+  BMP_meta meta = {0};
 
   res = read_meta(input_path, &meta);
   if (res != 1)
@@ -22,8 +22,8 @@ int compress_bmp(const char *input_path, const char *output_path) {
   uint8_t padding_bytes_to_skip = total_padded_row_length - unpadded_row_length;
   uint8_t block_size = meta.BPP / 8;
 
-  file_struct file = {};
-  mem_struct mem = {};
+  file_struct file = {0};
+  mem_struct mem = {0};
 
   res = file_init(&file, input_path, output_path);
   if (res != 1)
@@ -88,7 +88,7 @@ cleanup:
 int decompress_bmp(const char *input_path, const char *output_path) {
   int res = 0;
 
-  BMP_meta meta = {};
+  BMP_meta meta = {0};
 
   res = read_meta(input_path, &meta);
   if (res != 1)
@@ -107,8 +107,8 @@ int decompress_bmp(const char *input_path, const char *output_path) {
   uint8_t block_size = meta.BPP / 8;
   uint8_t zero = 0;
 
-  file_struct file = {};
-  mem_struct mem = {};
+  file_struct file = {0};
+  mem_struct mem = {0};
 
   res = file_init(&file, input_path, output_path);
   if (res != 1)
