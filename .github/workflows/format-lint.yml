@@ -1,0 +1,37 @@
+name: Format and Lint
+
+on: push
+
+jobs:
+
+  clang-format:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository 
+        uses: actions/checkout@v4
+
+      - name: Run clang-format on all C files
+        uses: jidicula/clang-format-action@v4.11.0
+        with:
+          exclude-regex: 'external'
+          include-regex: '.*\.(c|h)$'
+
+  clang-tidy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install System Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang-tidy bear
+
+      - name: Generate Compilation Database via Bear
+        run: |
+          make clean || true
+          bear -- make
+
+      - name: Run clang-tidy static analysis
+        run: |
+          run-clang-tidy "^(?!external/).*\.(c|h)$" -status-returns-error
