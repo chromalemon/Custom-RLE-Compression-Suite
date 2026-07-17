@@ -1,11 +1,17 @@
 # RLE Compression Tool Overview
 
-This is a tool for compressing and decompressing files, using the Run Length Encoding algorithm. This type of compression is most commonly used for bitmap images, which often involve long sequences of repeating colours.
+A modular lossless compression utility in C supporting generic binary streams and 24-bit BMP images through configurable run-length encoding.
 
-> [!NOTE]
-> For BMP compression and decompression, only V3 24 BPP is supported.
+**Key Features**
 
-Example of compression:
+- Configurable word sizes
+- BMP parsing
+- Padding handling
+- Automated tests
+- Sanitizers
+- CI
+
+**Compression Example**
 
 ```
 Compression complete.
@@ -60,6 +66,9 @@ To create your own BMP files for testing, use ImageMagick. Head to their website
 
 **Example BMP File Creation:**
 
+> [!NOTE]
+> For BMP compression and decompression, only V3 24 BPP is supported.
+
 With ImageMagick installed, use this command to make an M by N BMP V3 image, with a full canvas of color C, stored in sample.bmp:
 
 ```bash
@@ -74,6 +83,6 @@ magick -size 16x16 xc:blue BMP3:sample.bmp
 
 # Backstory
 
-I wrote this program so I could explore file handling, streams, padding, buffers, strict formatting, error handling, memory management, and other principles/concepts.
+I started this project so I could explore file handling, streams, padding, buffers, strict formatting, error handling, memory management, and other principles/concepts.
 
 Originally, I had pure RLE in mind for standard text files. I stored counts as unsigned chars, and the data to compress was always 8 bits per block. This was a bit boring so I looked into BMP files and how they are formatted. I realised that instead of focusing specifically on files, I should make a universal RLE tool. It should be compatible with any input stream: files, network packets, sensor data, live video, and more.
