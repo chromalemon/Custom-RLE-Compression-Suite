@@ -83,8 +83,8 @@ int compress_regular(const char *input_path, const char *output_path,
                      const uint8_t block_size) {
   int res = 0;
 
-  file_struct file;
-  mem_struct mem;
+  file_struct file{};
+  mem_struct mem{};
 
   res = file_init(&file, input_path, output_path);
   if (res != 1)
@@ -139,8 +139,8 @@ cleanup:
 int decompress_regular(const char *input_path, const char *output_path) {
   int res = 0;
 
-  file_struct file;
-  mem_struct mem;
+  file_struct file{};
+  mem_struct mem{};
 
   res = file_init(&file, input_path, output_path);
   if (res != 1)
@@ -196,7 +196,7 @@ cleanup:
     fclose(file.infile);
   if (file.outfile)
     fclose(file.outfile);
-  if (mem.inp_buf != NULL)
+  if (mem.inp_buf)
     free(mem.inp_buf);
   if (mem.out_buf)
     free(mem.out_buf);
