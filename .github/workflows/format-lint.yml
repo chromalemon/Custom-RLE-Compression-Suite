@@ -34,4 +34,5 @@ jobs:
 
       - name: Run clang-tidy static analysis
         run: |
-          run-clang-tidy -clang-tidy-binary="clang-tidy -status-returns-error" "^(?!external/).*\.(c|h)$"
+          find . -type f \( -name "*.c" -o -name "*.h" \) ! -path "*/external/*" | \
+          xargs -I {} clang-tidy -status-returns-error -p=. {}
