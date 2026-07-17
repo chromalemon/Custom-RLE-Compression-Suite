@@ -1,5 +1,5 @@
-#include "rle.h"
 #include "file.h"
+#include "rle.h"
 
 int compress(mem_struct *mem) {
 	uint8_t *curr_block = mem->inp_buf;
@@ -87,13 +87,15 @@ int compress_regular(const char *input_path, const char *output_path,
 	mem_struct mem = {0};
 
 	res = file_init(&file, input_path, output_path);
-	if (res != 1)
-		return 0;
-
+	if (res != 1) {
+		res = 0;
+		goto cleanup;
+	}
 	res = mem_init(&mem, block_size, 0, 1, 0, file.input_size);
-	if (res != 1)
-		return 0;
-
+	if (res != 1) {
+		res = 0;
+		goto cleanup;
+	}
 	if (!fread(mem.inp_buf, mem.max_in_size, 1, file.infile)) {
 		fprintf(stderr, "Error: Could not read file into input buffer.\n");
 		res = 0;
@@ -101,9 +103,10 @@ int compress_regular(const char *input_path, const char *output_path,
 	}
 
 	res = compress(&mem);
-	if (res != 1)
+	if (res != 1) {
+		res = 0;
 		goto cleanup;
-
+	}
 	reg_meta meta = {0};
 	memcpy(&meta.signature, "RLE!", 4);
 	meta.block_size = block_size;
@@ -143,9 +146,10 @@ int decompress_regular(const char *input_path, const char *output_path) {
 	mem_struct mem = {0};
 
 	res = file_init(&file, input_path, output_path);
-	if (res != 1)
-		return 0;
-
+	if (res != 1) {
+		res = 0;
+		goto cleanup;
+	}
 	reg_meta meta = {0};
 
 	if (!fread(&meta, sizeof(reg_meta), 1, file.infile)) {
@@ -169,8 +173,10 @@ int decompress_regular(const char *input_path, const char *output_path) {
 
 	res = mem_init(&mem, meta.block_size, offset, 0, padded_size,
 				   file.input_size);
-	if (res != 1)
-		return 0;
+	if (res != 1) {
+		res = 0;
+		goto cleanup;
+	}
 
 	if (!fread(mem.inp_buf, mem.max_in_size, 1, file.infile)) {
 		fprintf(stderr, "Error: Could not read file into input buffer.\n");
@@ -179,9 +185,10 @@ int decompress_regular(const char *input_path, const char *output_path) {
 	}
 
 	res = decompress(&mem);
-	if (res != 1)
+	if (res != 1) {
+		res = 0;
 		goto cleanup;
-
+	}
 	if (!fwrite(mem.out_buf, meta.old_size, 1, file.outfile)) {
 		fprintf(stderr, "Error: Could not write payload to file.\n");
 		res = 0;
