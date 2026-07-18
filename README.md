@@ -1,3 +1,6 @@
+[![Build and Test](https://github.com/chromalemon/rle-compression-tool/actions/workflows/main.yml/badge.svg)](https://github.com/chromalemon/rle-compression-tool/actions/workflows/main.yml)
+[![Format and Lint](https://github.com/chromalemon/rle-compression-tool/actions/workflows/format-lint.yml/badge.svg)](https://github.com/chromalemon/rle-compression-tool/actions/workflows/format-lint.yml)
+
 # RLE Compression Tool Overview
 
 A modular lossless compression utility in C supporting generic binary streams and 24-bit BMP images through configurable run-length encoding.
